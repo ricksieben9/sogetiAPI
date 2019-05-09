@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {getRepository, Raw} from "typeorm";
+import {getRepository, MoreThan, Raw} from "typeorm";
 import {validate} from "class-validator";
 import {intake_moment} from "../entity/intake_moment";
 import {intake_moment_medicines} from "../entity/intake_moment_medicines";
@@ -7,8 +7,8 @@ import {intake_moment_medicines} from "../entity/intake_moment_medicines";
 class IntakeMomentController {
 
     static getAllIntakeMomentsOfReceiver = async (req: Request, res: Response) => {
-        //Get the ID from the url
-        const id: number = req.params.id;
+        //Get the receiver ID from the request
+        const {id} = req.body;
 
         //Get intakeMoments from database
         const intakeRepository = getRepository(intake_moment);
@@ -23,7 +23,7 @@ class IntakeMomentController {
 
     static getAllIntakeMomentsWithoutDispenser = async (req: Request, res: Response) => {
       const intakeRepository = getRepository(intake_moment);
-      const intakeMoments = await intakeRepository.find({relations:["receiver_id"],where:{dispenser: null, intake_start_time: Raw(alias =>`${alias} > NOW()`)}, order:{intake_start_time: "ASC"}});
+      const intakeMoments = await intakeRepository.find({relations:["receiver_id"],where:{dispenser: null, intake_start_time: MoreThan(Date.now())}, order:{intake_start_time: "ASC"}});
       res.send(intakeMoments);
     };
 
@@ -49,7 +49,7 @@ class IntakeMomentController {
 
 
         IntakeMoment.dispenser = intakeMomentData['dispenser_id'] ? intakeMomentData['dispenser_id'] : null;
-        IntakeMoment.receiver_id = req.params.id;
+        IntakeMoment.receiver_id = intakeMomentData['receiver_id'];
         IntakeMoment.intake_start_time = intakeMomentData['intake_start_time'];
         IntakeMoment.intake_end_time = intakeMomentData['intake_end_time'];
         IntakeMoment.priority_number = intakeMomentData['priority_number'];
@@ -96,7 +96,7 @@ class IntakeMomentController {
 
         //Validate the new values on model
         IntakeMoment.dispenser = intakeMomentData['dispenser_id'] ? intakeMomentData['dispenser_id'] : null;
-        IntakeMoment.receiver_id = req.params.id;
+        IntakeMoment.receiver_id = intakeMomentData['receiver_id'];
         IntakeMoment.intake_start_time = intakeMomentData['intake_start_time'];
         IntakeMoment.intake_end_time = intakeMomentData['intake_end_time'];
         IntakeMoment.priority_number = intakeMomentData['priority_number'];

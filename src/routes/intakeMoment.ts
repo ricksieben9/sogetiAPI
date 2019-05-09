@@ -4,7 +4,7 @@ import {checkJwt} from "../middlewares/checkJwt";
 
 const router = Router({mergeParams: true});
 
-//Get all intake Moments
+//Get all intake Moments of receiver
 router.get("/", IntakeMomentController.getAllIntakeMomentsOfReceiver);
 
 
@@ -13,7 +13,7 @@ router.get(
     "/:intakeMomentId([0-9]+)",IntakeMomentController.getOneById
 );
 
-//Get all intake moments
+//Get all intake moments without a dispenser
 router.get("/incomplete",IntakeMomentController.getAllIntakeMomentsWithoutDispenser);
 
 //Create a new intake moment

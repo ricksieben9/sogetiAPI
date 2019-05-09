@@ -2,12 +2,9 @@ import { Router } from "express";
 import ReceiverController from "../controllers/ReceiverController";
 import { checkJwt } from "../middlewares/checkJwt";
 import { checkRole } from "../middlewares/checkRole";
-import intakeMoment from "./intakeMoment";
 
 
 const router = Router();
-
-router.use("/:id([0-9]+)/intakeMoments", intakeMoment);
 
 //Get all receivers
 router.get("/", ReceiverController.listAll);
