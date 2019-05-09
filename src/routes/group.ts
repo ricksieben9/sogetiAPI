@@ -31,7 +31,7 @@ router.delete("/:groupId([0-9]+)/dispenser/:dispenserId([0-9]+)",GroupController
 //add receiver to group
 router.post("/:groupId([0-9]+)/receiver",GroupController.addReceiverToGroup);
 
-//add dispenser to group
+//remove receiver from group
 router.delete("/:groupId([0-9]+)/receiver/:receiverId([0-9]+)",GroupController.deleteReceiverFromGroup);
 
 export default router;
