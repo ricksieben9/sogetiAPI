@@ -206,7 +206,6 @@ class GroupController {
         //Try to save. If fails, A response is sent to the client
         try {
             Group.receivers.push(receiver);
-            console.log(Group.receivers);
             await groupRepository.save(Group);
         } catch (e) {
             res.status(409).send({"response": "Er is iets fout gegaan bij het toevoegen van een ontvanger aan de groep."});
