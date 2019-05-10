@@ -4,26 +4,28 @@ import {checkJwt} from "../middlewares/checkJwt";
 
 const router = Router({mergeParams: true});
 
-//Get all intake Moments of receiver
-router.get("/", IntakeMomentController.getAllIntakeMomentsOfReceiver);
+//Get all intake Moments
+router.get("/", [checkJwt],IntakeMomentController.getAllIntakeMoments);
 
+//Get all intake Moments of receiver
+router.get("/receiver/:receiverId([0-9]+)", [checkJwt],IntakeMomentController.getAllIntakeMomentsOfReceiver);
 
 // Get one intake moment
 router.get(
-    "/:intakeMomentId([0-9]+)",IntakeMomentController.getOneById
+    "/:intakeMomentId([0-9]+)",[checkJwt],IntakeMomentController.getOneById
 );
 
 //Get all intake moments without a dispenser
-router.get("/incomplete",IntakeMomentController.getAllIntakeMomentsWithoutDispenser);
+router.get("/incomplete",[checkJwt],IntakeMomentController.getAllIntakeMomentsWithoutDispenser);
 
 //Create a new intake moment
-router.post("/",IntakeMomentController.newIntakeMoment);
+router.post("/",[checkJwt],IntakeMomentController.newIntakeMoment);
 
 //Edit one intake moment
-router.patch("/:intakeMomentId([0-9]+)",IntakeMomentController.editIntakeMoment);
+router.patch("/:intakeMomentId([0-9]+)",[checkJwt],IntakeMomentController.editIntakeMoment);
 
 //Delete one intake moment
-router.delete("/:intakeMomentId([0-9]+)",IntakeMomentController.deleteIntakeMoment);
+router.delete("/:intakeMomentId([0-9]+)",[checkJwt],IntakeMomentController.deleteIntakeMoment);
 
 // get all intake moments (mobile)
 router.get("/mobile", [checkJwt], IntakeMomentController.getAllIntakeMomentsByDispenser);

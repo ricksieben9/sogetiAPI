@@ -6,14 +6,27 @@ import {intake_moment_medicines} from "../entity/intake_moment_medicines";
 
 class IntakeMomentController {
 
-    static getAllIntakeMomentsOfReceiver = async (req: Request, res: Response) => {
-        //Get the receiver ID from the request
-        const {id} = req.body;
+    static getAllIntakeMoments = async (req: Request, res: Response) => {
 
         //Get intakeMoments from database
         const intakeRepository = getRepository(intake_moment);
         try {
-            const intakeMoments = await intakeRepository.find({relations:["receiver_id","priority_number","dispenser","intake_moment_medicines"],where:{receiver_id: id}});
+            const intakeMoments = await intakeRepository.find({relations:["receiver_id","priority_number","dispenser","intake_moment_medicines"], order:{intake_start_time: "ASC"}});
+            res.send(intakeMoments);
+
+        } catch (error) {
+            res.status(404).send("Intake moments not found");
+        }
+    };
+
+    static getAllIntakeMomentsOfReceiver = async (req: Request, res: Response) => {
+        //Get the receiver ID from the request
+        const id = req.params.receiverId;
+
+        //Get intakeMoments from database
+        const intakeRepository = getRepository(intake_moment);
+        try {
+            const intakeMoments = await intakeRepository.find({relations:["receiver_id","priority_number","dispenser","intake_moment_medicines"],where:{receiver_id: id}, order:{intake_start_time: "ASC"}});
             res.send(intakeMoments);
 
         } catch (error) {
