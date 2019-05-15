@@ -271,8 +271,8 @@ class GroupController {
             return;
         }
 
-        //If all ok, send 201 response
-        res.status(201).send({"response": "Receiver deleted from group"});
+        //If all ok, send 200 response
+        res.status(200).send({"response": "Receiver deleted from group"});
     };
 }
 
