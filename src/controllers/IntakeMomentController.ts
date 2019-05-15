@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {getRepository, MoreThan, Raw} from "typeorm";
+import {getRepository, MoreThan} from "typeorm";
 import {validate} from "class-validator";
 import {intake_moment} from "../entity/intake_moment";
 import {intake_moment_medicines} from "../entity/intake_moment_medicines";
@@ -124,7 +124,7 @@ class IntakeMomentController {
         //Delete all original medicine from intakeMoment
         const intakeMomentMedicinesRepository = getRepository(intake_moment_medicines);
         try  {
-            intakeMomentMedicinesRepository.delete({intake_moment_id: id});
+            await intakeMomentMedicinesRepository.delete({intake_moment_id: id});
         } catch(error){
             res.status(409).send(error);
             return;
@@ -151,7 +151,7 @@ class IntakeMomentController {
             res.status(404).send({"response":"Intake moment not found"});
             return;
         }
-        intakeRepository.delete(id);
+        await intakeRepository.delete(IntakeMoment);
 
         //After all send a 204 (no content, but accepted) response
         res.status(204).send();
@@ -220,7 +220,7 @@ class IntakeMomentController {
         //Delete the original medicine from intakeMoment
         const intakeMomentMedicinesRepository = getRepository(intake_moment_medicines);
         try {
-            intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
+            await intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
         } catch (error) {
             res.status(409).send(error);
             return;
@@ -259,7 +259,7 @@ class IntakeMomentController {
         //Delete the original medicine from intakeMoment
         const intakeMomentMedicinesRepository = getRepository(intake_moment_medicines);
         try {
-            intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
+            await intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
         } catch (error) {
             res.status(409).send(error);
             return;

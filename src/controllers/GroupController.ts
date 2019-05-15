@@ -54,14 +54,13 @@ class GroupController {
         try {
             await groupRepository.save(Group);
         } catch (e) {
-            //res.status(409).send({"response": "Er is iets fout gegaan bij het aanmaken van de groep."});
-            res.status(409).send(e);
+            res.status(409).send({"response": "Er is iets fout gegaan bij het aanmaken van de groep."});
             return;
         }
 
         //If all ok, send 201 response
         res.status(201).send({"response": "Group created"});
-    }
+    };
 
     static editGroup = async (req:Request, res:Response) => {
         //Get the ID from the url
@@ -94,6 +93,15 @@ class GroupController {
             return;
         }
 
+        //Delete original group (required because TypeORM one-to-many / many to many bug)
+        try  {
+            let group = await groupRepository.findOne(id);
+            await groupRepository.remove(group);
+        } catch(error){
+            res.status(409).send({"response": "Er is iets fout gegaan bij het wijzigen van de groep."});
+            return;
+        }
+
         //Try to save. If fails, A response is sent to the client
         try {
             await groupRepository.save(Group);
@@ -104,24 +112,23 @@ class GroupController {
 
         //If all ok, send 201 response
         res.status(201).send({"response": "Group updated"});
-    }
+    };
 
     static deleteGroup = async (req: Request, res: Response) => {
         //Get the ID from the url
         const id = req.params.groupId;
 
         const groupRepository = getRepository(group);
-        let Group: group;
         try {
-            Group = await groupRepository.findOne(id);
+            let group = await groupRepository.findOne(id);
+            await groupRepository.remove(group);
+
+            //After all send a 204 (no content, but accepted) response
+            res.status(204).send();
         } catch (error) {
             res.status(404).send({"response":"Group not found"});
             return;
         }
-        groupRepository.delete(id);
-
-        //After all send a 204 (no content, but accepted) response
-        res.status(204).send();
     };
 
     static addDispenserToGroup = async (req: Request, res: Response) => {
@@ -162,11 +169,10 @@ class GroupController {
         const dispenser_id = req.params.dispenserId;
 
         const groupRepository = getRepository(group);
-        let Group;
 
         //get group from database
         try {
-            Group = await groupRepository.findOne(id);
+            await groupRepository.findOne(id);
         } catch (error) {
             //If not found, send a 404 response
             res.status(404).send({"response": "Group not found."});
@@ -175,14 +181,19 @@ class GroupController {
         //Try to save. If fails, A response is sent to the client
         try {
             const groupDispenserRepository = getRepository(group_dispensers);
-            groupDispenserRepository.delete({user_id: dispenser_id, groups_id: id});
+            let dispenser = await groupDispenserRepository.findOne({user_id: dispenser_id, groups_id: id});
+            if (!dispenser){
+                res.status(409).send({"response": "Dispenser not found"});
+                return;
+            }
+            await groupDispenserRepository.delete({user_id: dispenser_id, groups_id: id})
         } catch (e) {
             res.status(409).send({"response": "Er is iets fout gegaan bij het verwijderen van een toediener uit de groep."});
             return;
         }
 
-        //If all ok, send 201 response
-        res.status(201).send({"response": "Dispenser deleted from group"});
+        //If all ok, send 200 response
+        res.status(200).send({"response": "Dispenser deleted from group"});
     };
 
     static addReceiverToGroup = async (req: Request, res: Response) => {
@@ -203,6 +214,14 @@ class GroupController {
             res.status(404).send({"response": "Group not found."});
             return;
         }
+        //Send an error when receiver is already in group
+        let duplicateReceiver = Group.receivers.find(r => r.id === receiver.id);
+        if (duplicateReceiver)
+        {
+            res.status(409).send({"response": "Deze ontvanger zit al in deze groep."});
+            return;
+        }
+
         //Try to save. If fails, A response is sent to the client
         try {
             Group.receivers.push(receiver);
@@ -220,6 +239,24 @@ class GroupController {
         //Get the ID from the url
         const id = req.params.groupId;
         const receiver_id = req.params.receiverId;
+        const groupRepository = getRepository(group);
+        let Group;
+
+        //get group from database
+        try {
+            Group = await groupRepository.findOne(id,{relations:["receivers"]});
+        } catch (error) {
+            //If not found, send a 404 response
+            res.status(404).send({"response": "Group not found."});
+            return;
+        }
+        //Send an error when receiver is not in group
+        let receiver = Group.receivers.find(r => r.id === parseInt(receiver_id));
+        if (!receiver)
+        {
+            res.status(409).send({"response": "Receiver not found."});
+            return;
+        }
 
         //get group from database and remove receiver
         try {

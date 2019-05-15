@@ -27,7 +27,7 @@ export class group {
     
 
    
-    @ManyToMany(type=>receiver, receiver=>receiver.groups,{  nullable:false, })
+    @ManyToMany(type=>receiver, receiver=>receiver.groups,{  cascade:true ,nullable:false, })
     @JoinTable()
     receivers:receiver[];
     
