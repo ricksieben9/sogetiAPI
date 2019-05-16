@@ -22,13 +22,13 @@ export class group {
         
 
    
-    @OneToMany(type=>group_dispensers, group_dispensers=>group_dispensers.groups_id,{ onDelete: 'NO ACTION' ,onUpdate: 'NO ACTION' })
+    @OneToMany(type=>group_dispensers, group_dispensers=>group_dispensers.groups_id,{ cascade: true })
     group_dispensers:group_dispensers[];
     
 
    
-    @ManyToMany(type=>receiver, receiver=>receiver.groups,{  nullable:false, })
-    @JoinTable({ name:'group_receiver'})
+    @ManyToMany(type=>receiver, receiver=>receiver.groups,{  cascade:true ,nullable:false, })
+    @JoinTable()
     receivers:receiver[];
     
 }

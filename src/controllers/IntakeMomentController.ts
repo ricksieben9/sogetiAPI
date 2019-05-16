@@ -1,19 +1,32 @@
 import {Request, Response} from "express";
-import {getRepository, Raw} from "typeorm";
+import {getRepository, MoreThan} from "typeorm";
 import {validate} from "class-validator";
 import {intake_moment} from "../entity/intake_moment";
 import {intake_moment_medicines} from "../entity/intake_moment_medicines";
 
 class IntakeMomentController {
 
-    static getAllIntakeMomentsOfReceiver = async (req: Request, res: Response) => {
-        //Get the ID from the url
-        const id: number = req.params.id;
+    static getAllIntakeMoments = async (req: Request, res: Response) => {
 
         //Get intakeMoments from database
         const intakeRepository = getRepository(intake_moment);
         try {
-            const intakeMoments = await intakeRepository.find({relations:["receiver_id","priority_number","dispenser","intake_moment_medicines"],where:{receiver_id: id}});
+            const intakeMoments = await intakeRepository.find({relations:["receiver_id","priority_number","dispenser","intake_moment_medicines"], order:{intake_start_time: "ASC"}});
+            res.send(intakeMoments);
+
+        } catch (error) {
+            res.status(404).send("Intake moments not found");
+        }
+    };
+
+    static getAllIntakeMomentsOfReceiver = async (req: Request, res: Response) => {
+        //Get the receiver ID from the request
+        const id = req.params.receiverId;
+
+        //Get intakeMoments from database
+        const intakeRepository = getRepository(intake_moment);
+        try {
+            const intakeMoments = await intakeRepository.find({relations:["receiver_id","priority_number","dispenser","intake_moment_medicines"],where:{receiver_id: id}, order:{intake_start_time: "ASC"}});
             res.send(intakeMoments);
 
         } catch (error) {
@@ -23,7 +36,7 @@ class IntakeMomentController {
 
     static getAllIntakeMomentsWithoutDispenser = async (req: Request, res: Response) => {
       const intakeRepository = getRepository(intake_moment);
-      const intakeMoments = await intakeRepository.find({relations:["receiver_id"],where:{dispenser: null, intake_start_time: Raw(alias =>`${alias} > NOW()`)}, order:{intake_start_time: "ASC"}});
+      const intakeMoments = await intakeRepository.find({relations:["receiver_id"],where:{dispenser: null, intake_start_time: MoreThan(Date.now())}, order:{intake_start_time: "ASC"}});
       res.send(intakeMoments);
     };
 
@@ -49,7 +62,7 @@ class IntakeMomentController {
 
 
         IntakeMoment.dispenser = intakeMomentData['dispenser_id'] ? intakeMomentData['dispenser_id'] : null;
-        IntakeMoment.receiver_id = req.params.id;
+        IntakeMoment.receiver_id = intakeMomentData['receiver_id'];
         IntakeMoment.intake_start_time = intakeMomentData['intake_start_time'];
         IntakeMoment.intake_end_time = intakeMomentData['intake_end_time'];
         IntakeMoment.priority_number = intakeMomentData['priority_number'];
@@ -96,7 +109,7 @@ class IntakeMomentController {
 
         //Validate the new values on model
         IntakeMoment.dispenser = intakeMomentData['dispenser_id'] ? intakeMomentData['dispenser_id'] : null;
-        IntakeMoment.receiver_id = req.params.id;
+        IntakeMoment.receiver_id = intakeMomentData['receiver_id'];
         IntakeMoment.intake_start_time = intakeMomentData['intake_start_time'];
         IntakeMoment.intake_end_time = intakeMomentData['intake_end_time'];
         IntakeMoment.priority_number = intakeMomentData['priority_number'];
@@ -111,7 +124,7 @@ class IntakeMomentController {
         //Delete all original medicine from intakeMoment
         const intakeMomentMedicinesRepository = getRepository(intake_moment_medicines);
         try  {
-            intakeMomentMedicinesRepository.delete({intake_moment_id: id});
+            await intakeMomentMedicinesRepository.delete({intake_moment_id: id});
         } catch(error){
             res.status(409).send(error);
             return;
@@ -138,7 +151,7 @@ class IntakeMomentController {
             res.status(404).send({"response":"Intake moment not found"});
             return;
         }
-        intakeRepository.delete(id);
+        await intakeRepository.delete(IntakeMoment);
 
         //After all send a 204 (no content, but accepted) response
         res.status(204).send();
@@ -207,7 +220,7 @@ class IntakeMomentController {
         //Delete the original medicine from intakeMoment
         const intakeMomentMedicinesRepository = getRepository(intake_moment_medicines);
         try {
-            intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
+            await intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
         } catch (error) {
             res.status(409).send(error);
             return;
@@ -246,7 +259,7 @@ class IntakeMomentController {
         //Delete the original medicine from intakeMoment
         const intakeMomentMedicinesRepository = getRepository(intake_moment_medicines);
         try {
-            intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
+            await intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
         } catch (error) {
             res.status(409).send(error);
             return;

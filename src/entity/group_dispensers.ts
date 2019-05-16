@@ -17,13 +17,13 @@ export class group_dispensers {
 
 
    
-    @ManyToOne(type=>user, user=>user.group_dispensers,{ primary:true, nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION' })
+    @ManyToOne(type=>user, user=>user.group_dispensers,{ primary:true, nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION', eager: true })
     @JoinColumn({ name:'user_id'})
     user_id:user | null;
 
 
    
-    @ManyToOne(type=>priority, priority=>priority.group_dispensers,{  nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION' })
+    @ManyToOne(type=>priority, priority=>priority.group_dispensers,{  nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION', eager: true })
     @JoinColumn({ name:'priority'})
     priority:priority | null;
 
