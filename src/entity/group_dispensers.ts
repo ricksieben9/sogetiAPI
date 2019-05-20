@@ -11,7 +11,7 @@ import {priority} from "./priority";
 export class group_dispensers {
 
    
-    @ManyToOne(type=>group, group=>group.group_dispensers,{ primary:true, nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION' })
+    @ManyToOne(type=>group, group=>group.group_dispensers,{ primary:true, nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION', eager: true })
     @JoinColumn({ name:'groups_id'})
     groups_id:group | null;
 

@@ -31,4 +31,7 @@ router.post("/:groupId([0-9]+)/receiver",[checkJwt],GroupController.addReceiverT
 //remove receiver from group
 router.delete("/:groupId([0-9]+)/receiver/:receiverId([0-9]+)",[checkJwt],GroupController.deleteReceiverFromGroup);
 
+// get all groups of dispenser (mobile)
+router.get("/mobile", [checkJwt], GroupController.getGroupsFromDispenser);
+
 export default router;

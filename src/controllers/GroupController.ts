@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {getConnection, getRepository} from "typeorm";
+import {getConnection, getRepository, In} from "typeorm";
 import {validate} from "class-validator";
 
 import {group} from "../entity/group";
@@ -273,6 +273,27 @@ class GroupController {
 
         //If all ok, send 200 response
         res.status(200).send({"response": "Receiver deleted from group"});
+    };
+
+    static getGroupsFromDispenser = async (req: Request, res: Response) => {
+
+        const {userId} = res.locals.jwtPayload;
+
+        //Setup repositories
+        const groupRepository = getRepository(group);
+        const groupDispenserRepository = getRepository(group_dispensers);
+        try {
+            //get groups of dispenser from database
+            const groupsOfDispenser = await groupDispenserRepository.find({user_id: userId});
+            let groupsOfDispenserIds = [];
+            groupsOfDispenser.forEach(g => groupsOfDispenserIds.push(g.groups_id.id));
+
+            //find the groups from the group repository to access their receivers
+            const groups = await groupRepository.find({relations:["receivers"],where:{id: In(groupsOfDispenserIds)}});
+            res.status(200).send(groups);
+        } catch (error) {
+            res.status(404).send("groups not found");
+        }
     };
 }
 
