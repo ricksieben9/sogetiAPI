@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
 import {getConnection, getRepository, In} from "typeorm";
 import {validate} from "class-validator";
-
 import {group} from "../entity/group";
 import {group_dispensers} from "../entity/group_dispensers";
+import {group_receivers_receiver} from "../entity/group_receivers_receiver";
 
 class GroupController {
 
@@ -295,6 +295,21 @@ class GroupController {
             res.status(404).send("groups not found");
         }
     };
+
+    static getGroupReceivers = async (req: Request, res: Response) => {
+        const id: number = req.params.groupId;
+        const groupRepository = getRepository(group);
+        const groupReceiverRepository = getRepository(group_receivers_receiver);
+        try {
+            const receiversOfGroup = await groupReceiverRepository.find({groupId:id});
+            let receiversOfGroupIds = [];
+            receiversOfGroup.forEach(q => receiversOfGroupIds.push(q.receiver_id));
+        }
+        catch (error)
+        {
+            res.status(404).send("receivers not found");
+        }
+    }
 }
 
 export default GroupController;

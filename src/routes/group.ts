@@ -4,11 +4,15 @@ import {checkJwt} from "../middlewares/checkJwt";
 
 const router = Router({mergeParams: true});
 
+
 //Get all groups
 router.get("/",[checkJwt],GroupController.getAllGroups);
 
 // Get one group
 router.get("/:groupId([0-9]+)",[checkJwt],GroupController.getGroupById);
+
+// get all receivers within a group (web)
+router.get("/:groupId([0-9]+)/receivers", [checkJwt], GroupController.getGroupReceivers);
 
 //Create a new group
 router.post("/",[checkJwt],GroupController.newGroup);
