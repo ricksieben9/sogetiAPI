@@ -164,7 +164,7 @@ class IntakeMomentController {
         let intakeMoment;
         try {
             intakeMoment = await intakeMomentRepository.find({
-                relations: ["receiver_id", "priority_number", "dispenser", "intake_moment_medicines"],
+                relations: ["receiver_id", "priority_number", "intake_moment_medicines"],
                 where: {dispenser: userId}
             });
         } catch (error) {
@@ -186,7 +186,7 @@ class IntakeMomentController {
         let intakeMoment;
         try {
             intakeMoment = await intakeMomentRepository.find({
-                relations: ["receiver_id", "priority_number", "dispenser", "intake_moment_medicines"],
+                relations: ["receiver_id", "priority_number", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
                 where: {dispenser: userId, id: id}
             });
         } catch (error) {
@@ -207,24 +207,19 @@ class IntakeMomentController {
         let IntakeMomentMedicine: intake_moment_medicines;
         try {
             IntakeMomentMedicine = await intakeMomentMedicineRepository.findOne({
+                relations: ["intake_moment_id", "medicine_id"],
+                where:{
                 intake_moment_id: id,
-                medicine_id: medicine_id.id
-            });
+                medicine_id: medicine_id.id,
+            }});
         } catch (error) {
             //If not found, send a 404 response
             res.status(404).send({"response": "Toedienmoment medicijn niet gevonden!"});
             return;
         }
-        IntakeMomentMedicine.intake_moment_id = id;
+
         IntakeMomentMedicine.completed_at = completed_at.toString();
-        //Delete the original medicine from intakeMoment
-        const intakeMomentMedicinesRepository = getRepository(intake_moment_medicines);
-        try {
-            await intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
-        } catch (error) {
-            res.status(409).send(error);
-            return;
-        }
+
         //Try to safe, if fails, that means intake moment medicine already in use
         try {
             await intakeMomentMedicineRepository.save(IntakeMomentMedicine);
@@ -245,25 +240,19 @@ class IntakeMomentController {
         let IntakeMomentMedicine: intake_moment_medicines;
         try {
             IntakeMomentMedicine = await intakeMomentMedicineRepository.findOne({
-                intake_moment_id: id,
-                medicine_id: medicine_id.id
-            });
+                relations: ["intake_moment_id", "medicine_id"],
+                where:{
+                    intake_moment_id: id,
+                    medicine_id: medicine_id.id,
+                }});
 
         } catch (error) {
             //If not found, send a 404 response
             res.status(404).send({"response": "Toedienmoment medicijn niet gevonden!"});
             return;
         }
-        IntakeMomentMedicine.intake_moment_id = id;
         IntakeMomentMedicine.completed_at = null;
-        //Delete the original medicine from intakeMoment
-        const intakeMomentMedicinesRepository = getRepository(intake_moment_medicines);
-        try {
-            await intakeMomentMedicinesRepository.delete({intake_moment_id: id, medicine_id: medicine_id.id});
-        } catch (error) {
-            res.status(409).send(error);
-            return;
-        }
+
         //Try to safe, if fails, that means intake moment medicine already in use
         try {
             await intakeMomentMedicineRepository.save(IntakeMomentMedicine);

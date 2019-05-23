@@ -8,13 +8,13 @@ import {medicine} from "./medicine";
 export class intake_moment_medicines {
 
    
-    @ManyToOne(type=>intake_moment, intake_moment=>intake_moment.intake_moment_medicines,{ primary:true, nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION', eager: true})
+    @ManyToOne(type=>intake_moment, intake_moment=>intake_moment.intake_moment_medicines,{ primary:true, nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION'})
     @JoinColumn({ name:'intake_moment_id'})
     intake_moment_id:intake_moment | null;
 
 
    
-    @ManyToOne(type=>medicine, medicine=>medicine.intake_moment_medicines,{ primary:true, nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION', eager: true })
+    @ManyToOne(type=>medicine, medicine=>medicine.intake_moment_medicines,{ primary:true, nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION' })
     @JoinColumn({ name:'medicine_id'})
     medicine_id:medicine | null;
 
