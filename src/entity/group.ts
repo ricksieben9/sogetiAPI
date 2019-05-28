@@ -4,6 +4,7 @@ import {receiver} from "./receiver";
 
 
 @Entity("group",{schema:"asautar_db" } )
+@Index("name_UNIQUE",["name",],{unique:true})
 export class group {
 
     @PrimaryGeneratedColumn({
