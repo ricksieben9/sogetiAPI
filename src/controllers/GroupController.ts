@@ -12,7 +12,7 @@ class GroupController {
         //Get groups from database
         const groupRepository = getRepository(group);
         try {
-            const groups = await groupRepository.find();
+            const groups = await groupRepository.find({order:{name: "ASC"} });
             res.send(groups);
 
         } catch (error) {
@@ -289,7 +289,7 @@ class GroupController {
             groupsOfDispenser.forEach(g => groupsOfDispenserIds.push(g.groups_id.id));
 
             //find the groups from the group repository to access their receivers
-            const groups = await groupRepository.find({relations:["receivers"],where:{id: In(groupsOfDispenserIds)}});
+            const groups = await groupRepository.find({relations:["receivers"],where:{id: In(groupsOfDispenserIds)},order:{name: "ASC"}});
             res.status(200).send(groups);
         } catch (error) {
             res.status(404).send("groups not found");
