@@ -35,7 +35,7 @@ export class Subscriber implements EntitySubscriberInterface<intake_moment> {
             // If array medicinesCompleted has false and is overtime then send request
             if (medicinesCompleted.includes(false) && overtime) {
                 addPriorityTime(event.id, event.intake_moment_medicines, event.priority_number.time_to_notificate.time);
-                sendMessage(await getReceiverGroup(event.receiver_id.id));
+                sendMessage(await getReceiverGroup(event.receiver_id.id), event.id);
                 console.log('this is overtime' + event.id);
             }
         }
@@ -43,9 +43,7 @@ export class Subscriber implements EntitySubscriberInterface<intake_moment> {
 }
 
 // Send message to group
-function sendMessage(groupId) {
-    // This registration token comes from the client FCM SDKs.
-    let registrationToken = 'd4toKoH9vMM:APA91bEbu-VFs8azWoSitqhka57wUEguoE4zUBevZKf6AVAGaZdlpY1YapvfOpYMlE5_wTDJi_rBKqMsmP8wIRuGmvy32B0q0r-P8F1DhT8H5eDBtqiFAw4GnH2UA6O1Zaz_oV1IQidi';
+function sendMessage(groupId, intakeMomentId) {
     // Send to topic/group
     let topic = 'Group' + groupId;
 
@@ -56,10 +54,9 @@ function sendMessage(groupId) {
             "body": "Er is een toedienmoment die over zijn tijdsvenster heen zit"
         },
         data: {
-            id: '15',
+            id: intakeMomentId.toString(),
         },
-        token: registrationToken
-        // topic: topic
+        topic: topic
     };
 
     // Send a message to the device corresponding to the provided
