@@ -2,6 +2,7 @@ import {EntitySubscriberInterface, EventSubscriber} from "typeorm";
 import {intake_moment} from "../entity/intake_moment";
 import * as admin from "firebase-admin";
 import IntakeMomentController from "../controllers/IntakeMomentController"
+import Receiver from "../controllers/ReceiverController";
 
 @EventSubscriber()
 export class Subscriber implements EntitySubscriberInterface<intake_moment> {
@@ -16,37 +17,43 @@ export class Subscriber implements EntitySubscriberInterface<intake_moment> {
     /**
      * Called after load intake moment.
      */
-    afterLoad(event: any) {
+    async afterLoad(event: any) {
+        // Check if intake moment has medicines
         if (event.intake_moment_medicines) {
-
-            // array of all medicines if completed_at is not null as true/false
-            let tf = event.intake_moment_medicines.map(function (t) {
+            // Array of all medicines if completed_at is not null as true/false
+            let medicinesCompleted = event.intake_moment_medicines.map(function (t) {
                 return t.completed_at !== null
             });
+            // Get minimum time window
             let minTimeWindow = Math.min.apply(Math, event.intake_moment_medicines.map(function (o) {
                 return o.time_window;
             }));
+            // Calculate if overtime as boolean true/false
             let overtime = addMinutes(event.intake_start_time, minTimeWindow) < new Date();
 
-            // boolean if overtime (true/false)
-            // if array has false and is overtime then send request
-            if (tf.includes(false) && overtime) {
+            // Boolean if overtime (true/false)
+            // If array medicinesCompleted has false and is overtime then send request
+            if (medicinesCompleted.includes(false) && overtime) {
                 addPriorityTime(event.id, event.intake_moment_medicines, event.priority_number.time_to_notificate.time);
+                sendMessage(await getReceiverGroup(event.receiver_id.id));
                 console.log('this is overtime' + event.id);
             }
         }
     }
 }
 
-function sendMessage(group) {
+// Send message to group
+function sendMessage(groupId) {
     // This registration token comes from the client FCM SDKs.
     let registrationToken = 'd4toKoH9vMM:APA91bEbu-VFs8azWoSitqhka57wUEguoE4zUBevZKf6AVAGaZdlpY1YapvfOpYMlE5_wTDJi_rBKqMsmP8wIRuGmvy32B0q0r-P8F1DhT8H5eDBtqiFAw4GnH2UA6O1Zaz_oV1IQidi';
-    let topic = group;
+    // Send to topic/group
+    let topic = 'Group' + groupId;
 
+    // Message body
     let message = {
         notification: {
-            "title": "Test from server",
-            "body": "Test completed!"
+            "title": "Toedienmoment overtijd!",
+            "body": "Er is een toedienmoment die over zijn tijdsvenster heen zit"
         },
         data: {
             id: '15',
@@ -67,6 +74,7 @@ function sendMessage(group) {
         });
 }
 
+// Add priority time time to medicine time window to extend the intake moment
 function addPriorityTime(id, intakeMomentMedicines, priorityTime) {
     intakeMomentMedicines.forEach(function (t) {
         t.time_window = +t.time_window + +timeToMinutes(priorityTime);
@@ -74,10 +82,18 @@ function addPriorityTime(id, intakeMomentMedicines, priorityTime) {
     });
 }
 
+// Get first group of receiver
+async function getReceiverGroup(receiverId) {
+    let receiver = await Receiver.getReceiverGroup(receiverId);
+    return receiver.groups[0].id;
+}
+
+// DateTime add minutes
 function addMinutes(date, minutes) {
     return new Date(date.getTime() + minutes * 60000);
 }
 
+// Split HH:MM:ss to minutes
 function timeToMinutes(time) {
     let split = time.split(':');
     let hours = split[0];

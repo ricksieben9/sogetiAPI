@@ -3,6 +3,7 @@ import {getRepository} from "typeorm";
 import {validate} from "class-validator";
 
 import {receiver} from "../entity/receiver";
+import {group} from "../entity/group";
 
 class ReceiverController {
 
@@ -111,6 +112,26 @@ class ReceiverController {
 
         //After all send a 204 (no content, but accepted) response
         res.status(204).send();
+    };
+
+    // Get group of receiver
+    static getReceiverGroup = async (reciverid) => {
+        const id = reciverid;
+        const receiverRepository = getRepository(receiver);
+        let Receiver: receiver;
+        try {
+            Receiver = await receiverRepository.findOne({
+                relations: ["groups"],
+                where: {
+                    receivers: id,
+                },
+            });
+        } catch (error) {
+            //If not found, return false
+            return null;
+        }
+
+        return Receiver;
     };
 }
 

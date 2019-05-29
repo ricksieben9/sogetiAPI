@@ -309,7 +309,7 @@ class IntakeMomentController {
             return false;
         }
         return true;
-    }
+    };
 }
 
 export default IntakeMomentController;
