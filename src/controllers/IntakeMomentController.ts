@@ -3,6 +3,7 @@ import {getRepository, MoreThan} from "typeorm";
 import {validate} from "class-validator";
 import {intake_moment} from "../entity/intake_moment";
 import {intake_moment_medicines} from "../entity/intake_moment_medicines";
+import {group} from "../entity/group";
 
 class IntakeMomentController {
 
@@ -195,20 +196,38 @@ class IntakeMomentController {
 
     // Get intake moment detail by id and user (mobile)
     static getIntakeMomentDetail = async (req: Request, res: Response) => {
-        const {userId} = res.locals.jwtPayload;
         const id: number = req.params.id;
         const intakeMomentRepository = getRepository(intake_moment);
         let intakeMoment;
         try {
             intakeMoment = await intakeMomentRepository.find({
                 relations: ["receiver_id", "priority_number", "priority_number.time_to_notificate", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
-                where: {dispenser: userId, id: id}
+                where: {id: id}
             });
         } catch (error) {
             //If not found, send a 404 response
             res.status(404).send({"response": "Toedienmoment gegevens niet gevonden!"});
             return;
         }
+
+        /*uncomment this section when database changes on receivers and groups are in effect(tested with intakemoment dispenser)*/
+        // get group of receiver
+        // const groupRepository = getRepository(group);
+        // const groupReceiverRepository = getRepository(group_receivers_receiver);
+        // if (intakeMoment[0].dispenser)
+        //{
+        // try{
+        //     const groupOfReceiver = await groupReceiverRepository.findOne({receiver_id: intakeMoment[0].receiver_id.id});
+        //     const currentGroup = await groupRepository.findOne({id: groupOfReceiver.groups_id.id});
+        //     const {userId} = res.locals.jwtPayload;
+        //     await groupDispenserRepository.findOneOrFail({user_id: userId, groups_id: currentGroup})
+        // }
+        // catch (error) {
+        //     res.status(409).send({"response": "U bent niet gemachtigd dit te bekijken!"});
+        //     return
+        // }
+        // }
+
         //Send the users object
         res.status(200).send(intakeMoment);
     };
