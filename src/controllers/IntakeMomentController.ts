@@ -203,9 +203,8 @@ class IntakeMomentController {
         // if (intakeMoment[0].dispenser)
         //{
         // try{
-        //     const groupOfDispenser = await groupDispenserRepository.find({user_id: intakeMoment[0].dispenser.id});
-        //     const groupOfReceiver = await groupReceiverRepository.findOne({receiver_id: intakeMoment.receiver_id.id});
-        //     const currentGroup = await groupRepository.find({relations:["group_dispensers"],where:{id: groupOfReceiver.groups_id.id}});
+        //     const groupOfReceiver = await groupReceiverRepository.findOne({receiver_id: intakeMoment[0].receiver_id.id});
+        //     const currentGroup = await groupRepository.findOne({id: groupOfReceiver.groups_id.id});
         //     const {userId} = res.locals.jwtPayload;
         //     await groupDispenserRepository.findOneOrFail({user_id: userId, groups_id: currentGroup})
         // }
