@@ -4,7 +4,6 @@ import {validate} from "class-validator";
 import {intake_moment} from "../entity/intake_moment";
 import {intake_moment_medicines} from "../entity/intake_moment_medicines";
 import {group} from "../entity/group";
-import {group_dispensers} from "../entity/group_dispensers";
 
 class IntakeMomentController {
 
@@ -209,7 +208,6 @@ class IntakeMomentController {
         //     await groupDispenserRepository.findOneOrFail({user_id: userId, groups_id: currentGroup})
         // }
         // catch (error) {
-        //     console.log(error);
         //     res.status(409).send({"response": "U bent niet gemachtigd dit te bekijken!"});
         //     return
         // }
