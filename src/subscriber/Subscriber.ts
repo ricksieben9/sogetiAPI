@@ -35,7 +35,7 @@ export class Subscriber implements EntitySubscriberInterface<intake_moment> {
             // If array medicinesCompleted has false and is overtime then send request
             if (medicinesCompleted.includes(false) && overtime) {
                 addPriorityTime(event.id, event.intake_moment_medicines, event.priority_number.time_to_notificate.time);
-                sendMessage(await getReceiverGroup(event.receiver_id.id), event.id);
+                sendMessage(await getReceiverGroup(event.receiver_id.id), event);
                 console.log('this is overtime' + event.id);
             }
         }
@@ -43,7 +43,7 @@ export class Subscriber implements EntitySubscriberInterface<intake_moment> {
 }
 
 // Send message to group
-function sendMessage(groupId, intakeMomentId) {
+function sendMessage(groupId, event) {
     // Send to topic/group
     let topic = 'Group' + groupId;
 
@@ -54,7 +54,9 @@ function sendMessage(groupId, intakeMomentId) {
             "body": "Er is een toedienmoment die over zijn tijdsvenster heen zit"
         },
         data: {
-            id: intakeMomentId.toString(),
+            id: event.id.toString(),
+            name: event.receiver_id.name.toString(),
+            time: event.intake_start_time.toDateString(),
         },
         topic: topic
     };
