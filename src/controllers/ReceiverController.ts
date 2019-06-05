@@ -115,8 +115,8 @@ class ReceiverController {
     };
 
     // Get group of receiver
-    static getReceiverGroup = async (reciverid) => {
-        const id = reciverid;
+    static getReceiverGroup = async (receiverId) => {
+        const id = receiverId;
         const receiverRepository = getRepository(receiver);
         let Receiver: receiver;
         try {
@@ -131,7 +131,7 @@ class ReceiverController {
             return null;
         }
 
-        return Receiver;
+        return Receiver.groups[0].id;
     };
 }
 

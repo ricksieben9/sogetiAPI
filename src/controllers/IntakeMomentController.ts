@@ -183,7 +183,6 @@ class IntakeMomentController {
                 where: {dispenser: userId}
             });
         } catch (error) {
-            console.log(error);
             //If not found, send a 404 response
             res.status(404).send({"response": "Toedienmoment niet gevonden!"});
             return;

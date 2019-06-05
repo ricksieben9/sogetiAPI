@@ -83,8 +83,7 @@ function addPriorityTime(id, intakeMomentMedicines, priorityTime) {
 
 // Get first group of receiver
 async function getReceiverGroup(receiverId) {
-    let receiver = await Receiver.getReceiverGroup(receiverId);
-    return receiver.groups[0].id;
+    return await Receiver.getReceiverGroup(receiverId);
 }
 
 // DateTime add minutes
