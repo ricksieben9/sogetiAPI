@@ -10,7 +10,7 @@ class ReceiverController {
     static listAll = async (req: Request, res: Response) => {
         //Get receivers from database
         const receiverRepository = getRepository(receiver);
-        const receivers = await receiverRepository.find();
+        const receivers = await receiverRepository.find({relations: ["groups"]});
 
         //Send the receivers object
         res.send(receivers);
