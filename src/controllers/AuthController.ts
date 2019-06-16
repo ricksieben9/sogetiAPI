@@ -5,7 +5,6 @@ import {validate} from "class-validator";
 
 import {user} from "../entity/user";
 import config from "../config/config";
-import {roles} from "../entity/roles";
 
 class AuthController {
     static login = async (req: Request, res: Response) => {
@@ -40,7 +39,7 @@ class AuthController {
             return;
         }
 
-        //Sing JWT, valid for 1 hour
+        //String JWT, valid for 1 hour
         const token = jwt.sign(
             {userId: User.id, username: User.email},
             config.jwtSecret,

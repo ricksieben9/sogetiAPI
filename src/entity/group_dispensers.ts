@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Entity, Index, JoinColumn, ManyToOne} from "typeorm";
 import {group} from "./group";
 import {user} from "./user";
 import {priority} from "./priority";

@@ -25,7 +25,7 @@ class MedicineController {
         Medicine.unit = unit;
         Medicine.description = description;
 
-        //validate if the parameters are ok
+        //Validate if the parameters are ok
         const errors = await validate(Medicine);
         if (errors.length > 0) {
             res.status(400).send(errors);

@@ -20,16 +20,16 @@ router.patch("/:groupId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener"])],Group
 //Delete one group
 router.delete("/:groupId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.deleteGroup);
 
-//add dispenser to group
+//Add dispenser to group
 router.post("/:groupId([0-9]+)/dispenser",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.addDispenserToGroup);
 
-//remove dispenser from group
+//Remove  dispenser from group
 router.delete("/:groupId([0-9]+)/dispenser/:dispenserId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.deleteDispenserFromGroup);
 
-//add receiver to group
+//Add receiver to group
 router.post("/:groupId([0-9]+)/receiver",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.addReceiverToGroup);
 
-//remove receiver from group
+//Remove  receiver from group
 router.delete("/:groupId([0-9]+)/receiver/:receiverId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.deleteReceiverFromGroup);
 
 // get all groups of dispenser (mobile)

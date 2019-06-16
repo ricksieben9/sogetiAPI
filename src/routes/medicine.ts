@@ -2,9 +2,6 @@ import { Router } from "express";
 import MedicineController from "../controllers/MedicineController";
 import { checkJwt } from "../middlewares/checkJwt";
 import { checkRole } from "../middlewares/checkRole";
-import ReceiverController from "../controllers/ReceiverController";
-
-
 
 const router = Router();
 
