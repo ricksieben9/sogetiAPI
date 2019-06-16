@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Column, Entity, OneToMany} from "typeorm";
 import {priority} from "./priority";
 
 
@@ -11,7 +11,6 @@ export class timetonotificate {
         name:"time"
         })
     time:string;
-        
 
    
     @OneToMany(type=>priority, priority=>priority.time_to_notificate,{ onDelete: 'NO ACTION' ,onUpdate: 'NO ACTION' })

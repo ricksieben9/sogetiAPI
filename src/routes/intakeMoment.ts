@@ -1,4 +1,4 @@
-import { Router } from "express";
+import {Router} from "express";
 import IntakeMomentController from "../controllers/IntakeMomentController";
 import {checkJwt} from "../middlewares/checkJwt";
 
@@ -10,7 +10,7 @@ router.get("/", [checkJwt],IntakeMomentController.getAllIntakeMoments);
 //Get all intake Moments of receiver
 router.get("/receiver/:receiverId([0-9]+)", [checkJwt],IntakeMomentController.getAllIntakeMomentsOfReceiver);
 
-// Get one intake moment
+//Get one intake moment
 router.get(
     "/:intakeMomentId([0-9]+)",[checkJwt],IntakeMomentController.getOneById
 );
@@ -27,16 +27,16 @@ router.patch("/:intakeMomentId([0-9]+)",[checkJwt],IntakeMomentController.editIn
 //Delete one intake moment
 router.delete("/:intakeMomentId([0-9]+)",[checkJwt],IntakeMomentController.deleteIntakeMoment);
 
-// get all intake moments (mobile)
+//Get all intake moments (mobile)
 router.get("/mobile", [checkJwt], IntakeMomentController.getAllIntakeMomentsByDispenser);
 
-// get all details of a intake moment (mobile)
+//Get all details of a intake moment (mobile)
 router.get("/mobile/:id([0-9]+)", [checkJwt], IntakeMomentController.getIntakeMomentDetail);
 
-// set intake moment medicine on completed (mobile)
+//Set intake moment medicine on completed (mobile)
 router.patch("/mobile/:id([0-9]+)", [checkJwt], IntakeMomentController.setIntakeMomentMedicineCompleted);
 
-// remove intake moment medicine completed (mobile)
+//Remove intake moment medicine completed (mobile)
 router.delete("/mobile/:id([0-9]+)", [checkJwt], IntakeMomentController.removeIntakeMomentMedicineCompleted);
 
 export default router;

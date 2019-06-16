@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {medicine_types} from "./medicine_types";
 import {intake_moment_medicines} from "./intake_moment_medicines";
 
@@ -40,7 +40,6 @@ export class medicine {
         name:"unit"
         })
     unit:string;
-        
 
    
     @OneToMany(type=>intake_moment_medicines, intake_moment_medicines=>intake_moment_medicines.medicine_id,{ onDelete: 'NO ACTION' ,onUpdate: 'NO ACTION' })

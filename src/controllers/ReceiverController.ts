@@ -3,7 +3,6 @@ import {getRepository} from "typeorm";
 import {validate} from "class-validator";
 
 import {receiver} from "../entity/receiver";
-import {group} from "../entity/group";
 
 class ReceiverController {
 
@@ -39,7 +38,7 @@ class ReceiverController {
 
         Receiver.name = receivername['name'];
 
-        //validate if the parameters are ok
+        //Validate if the parameters are ok
         const errors = await validate(Receiver);
         if (errors.length > 0) {
             res.status(400).send(errors);

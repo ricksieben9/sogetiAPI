@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Column, Entity, OneToMany} from "typeorm";
 import {log} from "./log";
 
 
@@ -12,8 +12,6 @@ export class log_category {
         name:"name"
         })
     name:string;
-        
-
    
     @OneToMany(type=>log, log=>log.category,{ onDelete: 'NO ACTION' ,onUpdate: 'NO ACTION' })
     logs:log[];

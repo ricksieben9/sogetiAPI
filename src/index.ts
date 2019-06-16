@@ -15,7 +15,7 @@ createConnection()
         const app = express();
         const serviceAccount = require("../serviceAccountKey.json");
 
-        // Call midlewares
+        // Call middlewares
         app.use(cors());
         app.use(helmet());
         app.use(bodyParser.json());

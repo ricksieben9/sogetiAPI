@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Column, Entity, Index, JoinColumn, ManyToOne, OneToMany} from "typeorm";
 import {timetonotificate} from "./timetonotificate";
 import {group_dispensers} from "./group_dispensers";
 import {intake_moment} from "./intake_moment";
@@ -14,13 +14,11 @@ export class priority {
         name:"number"
         })
     number:number;
-        
 
    
     @ManyToOne(type=>timetonotificate, timetonotificate=>timetonotificate.priority,{  nullable:false,onDelete: 'NO ACTION',onUpdate: 'NO ACTION' })
     @JoinColumn({ name:'time_to_notificate'})
     time_to_notificate:timetonotificate | null;
-
 
    
     @OneToMany(type=>group_dispensers, group_dispensers=>group_dispensers.priority,{ onDelete: 'NO ACTION' ,onUpdate: 'NO ACTION' })

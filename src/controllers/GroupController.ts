@@ -42,7 +42,7 @@ class GroupController {
         Group.group_dispensers = group_dispensers;
         Group.receivers = receivers;
 
-        //validate if the parameters are ok
+        //Validate if the parameters are ok
         const errors = await validate(Group);
         if (errors.length > 0) {
             res.status(400).send(errors);
@@ -69,10 +69,10 @@ class GroupController {
         const groupRepository = getRepository(group);
         let Group;
 
-        //get new values from client
+        //Get new values from client
         const {name,group_dispensers,receivers} = req.body;
 
-        //get group from database
+        //Get group from database
         try {
             Group = await groupRepository.findOne(id);
         } catch (error) {
@@ -135,13 +135,13 @@ class GroupController {
         //Get the ID from the url
         const id = req.params.groupId;
 
-        //get dispenser from client
+        //Get dispenser from client
         const {group_dispenser} = req.body;
 
         const groupRepository = getRepository(group);
         let Group;
 
-        //get group from database
+        //Get group from database
         try {
             Group = await groupRepository.findOne({relations:["group_dispensers"],where:{id: id}});
         } catch (error) {
@@ -170,7 +170,7 @@ class GroupController {
 
         const groupRepository = getRepository(group);
 
-        //get group from database
+        //Get group from database
         try {
             await groupRepository.findOne(id);
         } catch (error) {
@@ -178,6 +178,7 @@ class GroupController {
             res.status(404).send({"response": "Group not found."});
             return;
         }
+
         //Try to save. If fails, A response is sent to the client
         try {
             const groupDispenserRepository = getRepository(group_dispensers);
@@ -200,13 +201,13 @@ class GroupController {
         //Get the ID from the url
         const id = req.params.groupId;
 
-        //get dispenser from client
+        //Get dispenser from client
         const {receiver} = req.body;
 
         const groupRepository = getRepository(group);
         let Group;
 
-        //get group from database
+        //Get group from database
         try {
             Group = await groupRepository.findOne(id,{relations:["receivers"]});
         } catch (error) {
@@ -214,6 +215,7 @@ class GroupController {
             res.status(404).send({"response": "Group not found."});
             return;
         }
+
         //Send an error when receiver is already in group
         let duplicateReceiver = Group.receivers.find(r => r.id === receiver.id);
         if (duplicateReceiver)
@@ -242,7 +244,7 @@ class GroupController {
         const groupRepository = getRepository(group);
         let Group;
 
-        //get group from database
+        //Get group from database
         try {
             Group = await groupRepository.findOne(id,{relations:["receivers"]});
         } catch (error) {
@@ -258,7 +260,7 @@ class GroupController {
             return;
         }
 
-        //get group from database and remove receiver
+        //Get group from database and remove receiver
         try {
             await getConnection()
                 .createQueryBuilder()
@@ -283,12 +285,12 @@ class GroupController {
         const groupRepository = getRepository(group);
         const groupDispenserRepository = getRepository(group_dispensers);
         try {
-            //get groups of dispenser from database
+            //Get groups of dispenser from database
             const groupsOfDispenser = await groupDispenserRepository.find({user_id: userId});
             let groupsOfDispenserIds = [];
             groupsOfDispenser.forEach(g => groupsOfDispenserIds.push(g.groups_id.id));
 
-            //find the groups from the group repository to access their receivers
+            //Find the groups from the group repository to access their receivers
             const groups = await groupRepository.find({relations:["receivers"],where:{id: In(groupsOfDispenserIds)},order:{name: "ASC"}});
             res.status(200).send(groups);
         } catch (error) {

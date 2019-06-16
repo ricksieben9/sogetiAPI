@@ -1,9 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {log} from "../entity/log";
 import {intake_moment} from "../entity/intake_moment";
-import {validate} from "class-validator";
-import {getRepository, Not, Raw} from "typeorm";
-import {user} from "../entity/user";
+import {getRepository, Raw} from "typeorm";
 
 export const setIncompleteIntakeNotification = async (req: Request, res: Response, next: NextFunction) => {
 

@@ -1,10 +1,9 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {roles} from "./roles";
 import {group_dispensers} from "./group_dispensers";
 import {intake_moment} from "./intake_moment";
 import {log} from "./log";
 import * as bcrypt from "bcryptjs";
-
 
 
 @Entity("user",{schema:"asautar_db" } )

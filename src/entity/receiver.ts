@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {intake_moment} from "./intake_moment";
 import {group} from "./group";
 
@@ -21,7 +21,6 @@ export class receiver {
     name:string;
         
 
-   
     @OneToMany(type=>intake_moment, intake_moment=>intake_moment.receiver_id,{ onDelete: 'NO ACTION' ,onUpdate: 'NO ACTION' })
     intake_moments:intake_moment[];
     

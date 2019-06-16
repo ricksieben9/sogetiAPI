@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Column, Entity, OneToMany} from "typeorm";
 import {medicine} from "./medicine";
 
 
@@ -12,8 +12,6 @@ export class medicine_types {
         name:"type"
         })
     type:string;
-        
-
    
     @OneToMany(type=>medicine, medicine=>medicine.medicine_type,{ onDelete: 'NO ACTION' ,onUpdate: 'NO ACTION' })
     medicines:medicine[];

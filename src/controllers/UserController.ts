@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { getRepository } from "typeorm";
-import { validate } from "class-validator";
+import {Request, Response} from "express";
+import {getRepository} from "typeorm";
+import {validate} from "class-validator";
 import {user} from "../entity/user";
 
 class UserController {
@@ -124,6 +124,7 @@ class UserController {
             res.status(409).send({"response":"Bad request!"});
             return;
         }
+
         //After all send a 204 (no content, but accepted) response
         res.status(204).send({"response": "User updated"});
     };

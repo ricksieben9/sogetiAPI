@@ -25,7 +25,7 @@ class MedicineController {
         Medicine.unit = unit;
         Medicine.description = description;
 
-        //validate if the parameters are ok
+        //Validate if the parameters are ok
         const errors = await validate(Medicine);
         if (errors.length > 0) {
             res.status(400).send(errors);
@@ -80,6 +80,7 @@ class MedicineController {
             res.status(409).send({"response": "Naam is al in gebruik."});
             return;
         }
+
         //After all send a 204 (no content, but accepted) response
         res.status(204).send({"response": "Receiver updated"});
     };
