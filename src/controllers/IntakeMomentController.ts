@@ -12,7 +12,7 @@ class IntakeMomentController {
         const intakeRepository = getRepository(intake_moment);
         try {
             const intakeMoments = await intakeRepository.find({
-                relations: ["receiver_id", "priority_number", "dispenser", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
+                relations: ["receiver_id", "priority_number", "priority_number.time_to_notificate", "dispenser", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
                 order: {intake_start_time: "ASC"}
             });
             res.send(intakeMoments);
@@ -30,7 +30,7 @@ class IntakeMomentController {
         const intakeRepository = getRepository(intake_moment);
         try {
             const intakeMoments = await intakeRepository.find({
-                relations: ["receiver_id", "priority_number", "dispenser", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
+                relations: ["receiver_id", "priority_number", "priority_number.time_to_notificate", "dispenser", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
                 where: {receiver_id: id},
                 order: {intake_start_time: "ASC"}
             });
@@ -59,7 +59,7 @@ class IntakeMomentController {
         const intakeRepository = getRepository(intake_moment);
         try {
             const IntakeMoment = await intakeRepository.find({
-                relations: ["receiver_id", "priority_number", "dispenser", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
+                relations: ["receiver_id", "priority_number", "priority_number.time_to_notificate", "dispenser", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
                 where: {id: id}
             });
             res.send(IntakeMoment);
