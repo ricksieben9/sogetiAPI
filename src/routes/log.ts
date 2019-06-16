@@ -2,7 +2,6 @@ import { Router } from "express";
 import LogController from "../controllers/LogController";
 import { checkJwt } from "../middlewares/checkJwt";
 import { checkRole } from "../middlewares/checkRole";
-import ReceiverController from "../controllers/ReceiverController";
 
 
 const router = Router();

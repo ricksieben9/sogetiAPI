@@ -34,10 +34,10 @@ router.get("/mobile", [checkJwt, checkRole(["Hoofdtoediener","Toediener"])], Int
 // get all details of a intake moment (mobile)
 router.get("/mobile/:id([0-9]+)", [checkJwt, checkRole(["Hoofdtoediener","Toediener"])], IntakeMomentController.getIntakeMomentDetail);
 
-// set intake moment medicine on completed (mobile)
+//Set  intake moment medicine on completed (mobile)
 router.patch("/mobile/:id([0-9]+)", [checkJwt, checkRole(["Hoofdtoediener","Toediener"])], IntakeMomentController.setIntakeMomentMedicineCompleted);
 
-// remove intake moment medicine completed (mobile)
+//Remove intake moment medicine completed (mobile)
 router.delete("/mobile/:id([0-9]+)", [checkJwt, checkRole(["Hoofdtoediener","Toediener"])], IntakeMomentController.removeIntakeMomentMedicineCompleted);
 
 export default router;
