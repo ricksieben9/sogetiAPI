@@ -69,10 +69,10 @@ class GroupController {
         const groupRepository = getRepository(group);
         let Group;
 
-        //get new values from client
+        //Get new values from client
         const {name,group_dispensers,receivers} = req.body;
 
-        //get group from database
+        //Get group from database
         try {
             Group = await groupRepository.findOne(id);
         } catch (error) {
@@ -81,12 +81,12 @@ class GroupController {
             return;
         }
 
-        //set values of group
+        //Set values of group
         Group.name = name;
         Group.group_dispensers = group_dispensers;
         Group.receivers = receivers;
 
-        //validate if the parameters are ok
+        //Validate if the parameters are ok
         const errors = await validate(Group);
         if (errors.length > 0) {
             res.status(400).send(errors);
@@ -135,13 +135,13 @@ class GroupController {
         //Get the ID from the url
         const id = req.params.groupId;
 
-        //get dispenser from client
+        //Get dispenser from client
         const {group_dispenser} = req.body;
 
         const groupRepository = getRepository(group);
         let Group;
 
-        //get group from database
+        //Get group from database
         try {
             Group = await groupRepository.findOne({relations:["group_dispensers"],where:{id: id}});
         } catch (error) {
@@ -170,7 +170,7 @@ class GroupController {
 
         const groupRepository = getRepository(group);
 
-        //get group from database
+        //Get group from database
         try {
             await groupRepository.findOne(id);
         } catch (error) {
@@ -200,13 +200,13 @@ class GroupController {
         //Get the ID from the url
         const id = req.params.groupId;
 
-        //get dispenser from client
+        //Get dispenser from client
         const {receiver} = req.body;
 
         const groupRepository = getRepository(group);
         let Group;
 
-        //get group from database
+        //Get group from database
         try {
             Group = await groupRepository.findOne(id,{relations:["receivers"]});
         } catch (error) {
@@ -214,8 +214,10 @@ class GroupController {
             res.status(404).send({"response": "Group not found."});
             return;
         }
+
         //Send an error when receiver is already in group
         let duplicateReceiver = Group.receivers.find(r => r.id === receiver.id);
+
         if (duplicateReceiver)
         {
             res.status(409).send({"response": "Deze ontvanger zit al in deze groep."});
@@ -242,7 +244,7 @@ class GroupController {
         const groupRepository = getRepository(group);
         let Group;
 
-        //get group from database
+        //Get group from database
         try {
             Group = await groupRepository.findOne(id,{relations:["receivers"]});
         } catch (error) {
@@ -258,7 +260,7 @@ class GroupController {
             return;
         }
 
-        //get group from database and remove receiver
+        //Get group from database and remove receiver
         try {
             await getConnection()
                 .createQueryBuilder()

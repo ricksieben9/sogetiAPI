@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {Column, Entity, Index, JoinColumn, ManyToOne, OneToMany} from "typeorm";
 import {timetonotificate} from "./timetonotificate";
 import {group_dispensers} from "./group_dispensers";
 import {intake_moment} from "./intake_moment";

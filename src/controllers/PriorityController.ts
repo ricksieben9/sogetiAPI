@@ -78,6 +78,7 @@ class PriorityController {
             res.status(409).send({"response": "Nummer is al in gebruik."});
             return;
         }
+
         //After all send a 204 (no content, but accepted) response
         res.status(204).send({"response": "Priority updated"});
     };
@@ -87,6 +88,7 @@ class PriorityController {
         const id = req.params.id;
         const priorityRepository = getRepository(priority);
         let Priority: priority;
+        
         try {
             Priority = await priorityRepository.findOne(id);
         } catch (error) {

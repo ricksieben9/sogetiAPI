@@ -80,6 +80,7 @@ class MedicineController {
             res.status(409).send({"response": "Naam is al in gebruik."});
             return;
         }
+
         //After all send a 204 (no content, but accepted) response
         res.status(204).send({"response": "Receiver updated"});
     };

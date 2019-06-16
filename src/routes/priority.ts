@@ -1,7 +1,5 @@
-import { Router } from "express";
+import {Router} from "express";
 import PriorityController from "../controllers/PriorityController";
-import { checkJwt } from "../middlewares/checkJwt";
-import { checkRole } from "../middlewares/checkRole";
 
 const router = Router();
 

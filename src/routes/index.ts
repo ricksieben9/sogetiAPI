@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import {Router} from "express";
 import connection from "./connection";
 import auth from "./auth";
 import user from "./user";
@@ -8,6 +8,7 @@ import priority from "./priority";
 import log from "./log";
 import intakeMoment from "./intakeMoment";
 import group from "./group";
+
 const routes = Router();
 
 routes.use("/connection", connection);

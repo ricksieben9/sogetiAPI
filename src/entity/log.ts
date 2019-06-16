@@ -1,7 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
-import {log_category} from "./log_category";
-import {user} from "./user";
-
+import {Column,Entity,Index,PrimaryGeneratedColumn} from "typeorm";
 
 @Entity("log",{schema:"asautar_db" } )
 @Index("fk_Log_Log_category1_idx",["category",])
