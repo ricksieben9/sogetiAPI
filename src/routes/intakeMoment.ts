@@ -6,18 +6,18 @@ import {checkRole} from "../middlewares/checkRole";
 const router = Router({mergeParams: true});
 
 //Get all intake Moments
-router.get("/", [checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])],IntakeMomentController.getAllIntakeMoments);
+router.get("/", [checkJwt, checkRole(["Hoofdtoediener","Toediener"])],IntakeMomentController.getAllIntakeMoments);
 
 //Get all intake Moments of receiver
-router.get("/receiver/:receiverId([0-9]+)", [checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])],IntakeMomentController.getAllIntakeMomentsOfReceiver);
+router.get("/receiver/:receiverId([0-9]+)", [checkJwt, checkRole(["Hoofdtoediener","Toediener"])],IntakeMomentController.getAllIntakeMomentsOfReceiver);
 
 // Get one intake moment
 router.get(
-    "/:intakeMomentId([0-9]+)",[checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])],IntakeMomentController.getOneById
+    "/:intakeMomentId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener","Toediener"])],IntakeMomentController.getOneById
 );
 
 //Get all intake moments without a dispenser
-router.get("/incomplete",[checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])],IntakeMomentController.getAllIntakeMomentsWithoutDispenser);
+router.get("/incomplete",[checkJwt, checkRole(["Hoofdtoediener","Toediener"])],IntakeMomentController.getAllIntakeMomentsWithoutDispenser);
 
 //Create a new intake moment
 router.post("/",[checkJwt, checkRole(["Hoofdtoediener"])],IntakeMomentController.newIntakeMoment);

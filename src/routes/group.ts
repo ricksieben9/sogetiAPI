@@ -6,33 +6,33 @@ import {checkRole} from "../middlewares/checkRole";
 const router = Router({mergeParams: true});
 
 //Get all groups
-router.get("/",[checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])],GroupController.getAllGroups);
+router.get("/",[checkJwt, checkRole(["Hoofdtoediener","Toediener"])],GroupController.getAllGroups);
 
 // Get one group
-router.get("/:groupId([0-9]+)",[checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])],GroupController.getGroupById);
+router.get("/:groupId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener","Toediener"])],GroupController.getGroupById);
 
 //Create a new group
-router.post("/",[checkJwt, checkRole(["Admin","Hoofdtoediener"])],GroupController.newGroup);
+router.post("/",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.newGroup);
 
 //Edit one Group
-router.patch("/:groupId([0-9]+)",[checkJwt, checkRole(["Admin","Hoofdtoediener"])],GroupController.editGroup);
+router.patch("/:groupId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.editGroup);
 
 //Delete one group
-router.delete("/:groupId([0-9]+)",[checkJwt, checkRole(["Admin","Hoofdtoediener"])],GroupController.deleteGroup);
+router.delete("/:groupId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.deleteGroup);
 
 //add dispenser to group
-router.post("/:groupId([0-9]+)/dispenser",[checkJwt, checkRole(["Admin","Hoofdtoediener"])],GroupController.addDispenserToGroup);
+router.post("/:groupId([0-9]+)/dispenser",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.addDispenserToGroup);
 
 //remove dispenser from group
-router.delete("/:groupId([0-9]+)/dispenser/:dispenserId([0-9]+)",[checkJwt, checkRole(["Admin","Hoofdtoediener"])],GroupController.deleteDispenserFromGroup);
+router.delete("/:groupId([0-9]+)/dispenser/:dispenserId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.deleteDispenserFromGroup);
 
 //add receiver to group
-router.post("/:groupId([0-9]+)/receiver",[checkJwt, checkRole(["Admin","Hoofdtoediener"])],GroupController.addReceiverToGroup);
+router.post("/:groupId([0-9]+)/receiver",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.addReceiverToGroup);
 
 //remove receiver from group
-router.delete("/:groupId([0-9]+)/receiver/:receiverId([0-9]+)",[checkJwt, checkRole(["Admin","Hoofdtoediener"])],GroupController.deleteReceiverFromGroup);
+router.delete("/:groupId([0-9]+)/receiver/:receiverId([0-9]+)",[checkJwt, checkRole(["Hoofdtoediener"])],GroupController.deleteReceiverFromGroup);
 
 // get all groups of dispenser (mobile)
-router.get("/mobile", [checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])], GroupController.getGroupsFromDispenser);
+router.get("/mobile", [checkJwt, checkRole(["Hoofdtoediener","Toediener"])], GroupController.getGroupsFromDispenser);
 
 export default router;

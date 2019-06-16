@@ -8,25 +8,25 @@ const router = Router();
 //Get all priorities
 router.get(
     "/",
-    [checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])],
+    [checkJwt, checkRole(["Hoofdtoediener","Toediener"])],
     PriorityController.listAll);
 
 //Create a new priority
 router.post("/",
-    [checkJwt, checkRole(["Admin","Hoofdtoediener"])],
+    [checkJwt, checkRole(["Hoofdtoediener"])],
     PriorityController.newPriority);
 
 //Edit one priority
 router.patch(
     "/:id([0-9]+)",
-    [checkJwt, checkRole(["Admin","Hoofdtoediener"])],
+    [checkJwt, checkRole(["Hoofdtoediener"])],
     PriorityController.editPriority
 );
 
 //Delete one priority
 router.delete(
     "/:id([0-9]+)",
-    [checkJwt, checkRole(["Admin","Hoofdtoediener"])],
+    [checkJwt, checkRole(["Hoofdtoediener"])],
     PriorityController.deletePriority
 );
 
