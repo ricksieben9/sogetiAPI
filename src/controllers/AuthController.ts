@@ -96,6 +96,35 @@ class AuthController {
         res.status(204).send();
     };
 
+    static refreshToken = async (req: Request, res: Response) => {
+        //Check if username is set
+        let {username} = req.body;
+        if (!(username)) {
+            res.status(400).send();
+        }
+        //Get user from database
+        const userRepository = getRepository(user);
+        let User: user;
+        try {
+            User = await userRepository.findOne({where: {email: username}});
+        } catch (error) {
+            console.log(error);
+            res.status(401).send({"response": "Gebruiker niet gevonden"});
+            return;
+        }
+
+        //String JWT, valid for 1 hour
+        const token = jwt.sign(
+            {userId: User.id, username: User.email},
+            config.jwtSecret,
+            {expiresIn: "1h"}
+        );
+
+        //Send the jwt in the header
+        res.setHeader("token", token);
+        res.status(204).send();
+    }
+
 }
 
 export default AuthController;

@@ -11,4 +11,7 @@ router.post("/login", [setIncompleteIntakeNotification], AuthController.login);
 //Change my password
 router.post("/change-password", [checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])], AuthController.changePassword);
 
+//Refresh Token of inlog with PIN
+router.post("/refreshToken", AuthController.refreshToken);
+
 export default router;
