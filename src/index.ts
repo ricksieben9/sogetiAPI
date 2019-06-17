@@ -16,7 +16,14 @@ createConnection()
         const serviceAccount = require("../serviceAccountKey.json");
 
         // Call midlewares
-        app.use(cors());
+        app.use(function (req, res, next) {
+            //Enabling CORS
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization, token");
+            res.header("Access-Control-Expose-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization, token");
+            next();
+        });
         app.use(helmet());
         app.use(bodyParser.json());
 
