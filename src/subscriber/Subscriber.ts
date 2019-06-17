@@ -1,4 +1,4 @@
-import {EntitySubscriberInterface, EventSubscriber} from "typeorm";
+import {EntitySubscriberInterface, EventSubscriber, getRepository} from "typeorm";
 import {intake_moment} from "../entity/intake_moment";
 import * as admin from "firebase-admin";
 import IntakeMomentController from "../controllers/IntakeMomentController"
@@ -6,39 +6,57 @@ import Receiver from "../controllers/ReceiverController";
 
 @EventSubscriber()
 export class Subscriber implements EntitySubscriberInterface<intake_moment> {
+    private timer;
 
     /**
-     * Indicates that this subscriber only listen to intake_moment events.
+     * On init start timer.
      */
     listenTo() {
+        if (!this.timer) this.startInterval();
         return intake_moment;
+    }
+
+    startInterval() {
+        this.timer = setInterval(async () => {
+            const intakeRepository = getRepository(intake_moment);
+            try {
+                const intakeMoments = await intakeRepository.find({
+                    relations: ["receiver_id", "priority_number", "priority_number.time_to_notificate", "dispenser", "intake_moment_medicines", "intake_moment_medicines.medicine_id"],
+                    order: {intake_start_time: "ASC"}
+                });
+                this.check(intakeMoments);
+            } catch (e) {
+                console.log(e);
+            }
+        }, 5000);
     }
 
     /**
      * Called after load intake moment.
      */
-    async afterLoad(event: any) {
-        // Check if intake moment has medicines
-        if (event.intake_moment_medicines) {
-            // Array of all medicines if completed_at is not null as true/false
-            let medicinesCompleted = event.intake_moment_medicines.map(function (t) {
-                return t.completed_at !== null
-            });
-            // Get minimum time window
-            let minTimeWindow = Math.min.apply(Math, event.intake_moment_medicines.map(function (o) {
-                return o.time_window;
-            }));
-            // Calculate if overtime as boolean true/false
-            let overtime = addMinutes(event.intake_start_time, minTimeWindow) < new Date();
+    check(intakeMoments) {
+        intakeMoments.forEach(async function (intakeMoment) {
+            // Check if intake moment has medicines
+            if (intakeMoment.intake_moment_medicines[0].medicine_id !== null) {
+                // Array of all medicines if completed_at is not null as true/false
+                let medicinesCompleted = intakeMoment.intake_moment_medicines.map(function (t) {
+                    return t.completed_at !== null;
+                });
+                // Get minimum time window
+                let minTimeWindow = Math.min.apply(Math, intakeMoment.intake_moment_medicines.map(function (o) {
+                    return o.time_window;
+                }));
+                // Calculate if overtime as boolean true/false
+                let overtime = addMinutes(intakeMoment.intake_start_time, minTimeWindow) < new Date();
 
-            // Boolean if overtime (true/false)
-            // If array medicinesCompleted has false and is overtime then send request
-            if (medicinesCompleted.includes(false) && overtime) {
-                addPriorityTime(event.id, event.intake_moment_medicines, event.priority_number.time_to_notificate.time);
-                sendMessage(await getReceiverGroup(event.receiver_id.id), event);
-                console.log('this is overtime' + event.id);
+                // Boolean if overtime (true/false)
+                // If array medicinesCompleted has false and is overtime then send request
+                if (medicinesCompleted.includes(false) && overtime) {
+                    addPriorityTime(intakeMoment.id, intakeMoment.intake_moment_medicines, intakeMoment.priority_number.time_to_notificate.time);
+                    sendMessage(await getReceiverGroup(intakeMoment.receiver_id.id), intakeMoment);
+                }
             }
-        }
+        });
     }
 }
 
@@ -50,13 +68,14 @@ function sendMessage(groupId, event) {
     // Message body
     let message = {
         notification: {
-            "title": "Toedienmoment overtijd!",
+            "title": "Toedienmoment te laat!",
             "body": "Er is een toedienmoment die over zijn tijdsvenster heen zit"
         },
         data: {
             id: event.id.toString(),
             name: event.receiver_id.name.toString(),
-            time: event.intake_start_time.toDateString(),
+            time: event.intake_start_time.toISOString(),
+            dispenser: event.dispenser.name.toString()
         },
         topic: topic
     };
