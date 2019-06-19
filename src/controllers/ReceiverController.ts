@@ -120,14 +120,13 @@ class ReceiverController {
             Receiver = await receiverRepository.findOne({
                 relations: ["groups"],
                 where: {
-                    receivers: id,
+                    id: id,
                 },
             });
         } catch (error) {
             //If not found, return false
             return null;
         }
-
         return Receiver.groups[0].id;
     };
 }
