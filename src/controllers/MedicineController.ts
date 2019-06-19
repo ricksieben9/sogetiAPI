@@ -16,9 +16,32 @@ class MedicineController {
         res.send(medicines);
     };
 
+    static byId = async (req: Request, res: Response) => {
+        //Get parameters from the request
+        const id: number = req.params.id;
+
+        //Get medicine detail from database
+        const medicineRepository = getRepository(medicine);
+        let medicineDetail;
+        try {
+            medicineDetail = await medicineRepository.find({
+                relations: ["medicine_type"],
+                where: {id: id}
+            });
+        } catch (error) {
+            //If not found, send a 404 response
+            res.status(404).send({"response": "Medicine not found!"});
+            return;
+        }
+
+        //Send the medicine detail object
+        res.status(200).send(medicineDetail);
+
+    };
+
     static newMedicine = async (req: Request, res: Response) => {
         //Get parameters from the body
-        const {name, unit, description} = req.body;
+        const {name, unit, description} = req.body;
 
         let Medicine = new medicine();
         Medicine.name = name;
@@ -32,7 +55,7 @@ class MedicineController {
             return;
         }
 
-        //Try to save. If fails, the medicinename is already in use
+        //Try to save. If fails, the medicine name is already in use
         const medicineRepository = getRepository(medicine);
         try {
             await medicineRepository.save(Medicine);
@@ -48,7 +71,7 @@ class MedicineController {
     static editMedicine = async (req: Request, res: Response) => {
 
         //Get values from the body
-        const {id, name, unit, description} = req.body;
+        const {id, name, unit, description} = req.body;
 
         //Try to find medicine on database
         const medicineRepository = getRepository(medicine);
@@ -72,7 +95,7 @@ class MedicineController {
             return;
         }
 
-        //Try to safe, if fails, that means medicinename already in use
+        //Try to safe, if fails, that means medicine name already in use
         try {
             await medicineRepository.save(Medicine);
             res.send(Medicine);
@@ -81,7 +104,7 @@ class MedicineController {
             return;
         }
         //After all send a 204 (no content, but accepted) response
-        res.status(204).send({"response": "Receiver updated"});
+        res.status(204).send({"response": "Medicine updated"});
     };
 
     static deleteMedicine = async (req: Request, res: Response) => {
@@ -92,7 +115,7 @@ class MedicineController {
         try {
             Medicine = await medicineRepository.findOne(id);
         } catch (error) {
-            res.status(404).send({"response":"Receiver not found"});
+            res.status(404).send({"response": "Medicine not found"});
             return;
         }
         medicineRepository.delete(id);
