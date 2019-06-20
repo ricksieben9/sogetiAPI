@@ -16,7 +16,9 @@ createConnection()
         const serviceAccount = require("../serviceAccountKey.json");
 
         // Call midlewares
-        app.use(cors());
+        app.use(cors({
+            exposedHeaders: ['token'],
+        }));
         app.use(helmet());
         app.use(bodyParser.json());
 
