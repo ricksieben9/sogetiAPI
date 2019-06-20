@@ -9,7 +9,7 @@ class ReceiverController {
     static listAll = async (req: Request, res: Response) => {
         //Get receivers from database
         const receiverRepository = getRepository(receiver);
-        const receivers = await receiverRepository.find();
+        const receivers = await receiverRepository.find({relations: ["groups"]});
 
         //Send the receivers object
         res.send(receivers);
@@ -34,11 +34,9 @@ class ReceiverController {
         //Get parameters from the body
         let receivername = req.body;
         let Receiver = new receiver();
-
-
         Receiver.name = receivername['name'];
 
-        //validate if the parameters are ok
+        //Validate if the parameters are ok
         const errors = await validate(Receiver);
         if (errors.length > 0) {
             res.status(400).send(errors);
@@ -111,6 +109,25 @@ class ReceiverController {
 
         //After all send a 204 (no content, but accepted) response
         res.status(204).send();
+    };
+
+    // Get group of receiver
+    static getReceiverGroup = async (receiverId) => {
+        const id = receiverId;
+        const receiverRepository = getRepository(receiver);
+        let Receiver: receiver;
+        try {
+            Receiver = await receiverRepository.findOne({
+                relations: ["groups"],
+                where: {
+                    id: id,
+                },
+            });
+        } catch (error) {
+            //If not found, return false
+            return null;
+        }
+        return Receiver.groups[0].id;
     };
 }
 

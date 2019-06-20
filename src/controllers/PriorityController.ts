@@ -24,7 +24,7 @@ class PriorityController {
         Priority.number = number;
         Priority.time_to_notificate = time_to_notificate;
 
-        //validate if the parameters are ok
+        //Validate if the parameters are ok
         const errors = await validate(Priority);
         if (errors.length > 0) {
             res.status(400).send(errors);

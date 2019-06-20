@@ -7,29 +7,29 @@ import { checkRole } from "../middlewares/checkRole";
 const router = Router();
 
 //Get all receivers
-router.get("/", ReceiverController.listAll);
+router.get("/", [checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])], ReceiverController.listAll);
 
 // Get one receiver
 router.get(
     "/:id([0-9]+)",
-    //[checkJwt, checkRole(["ADMIN"])],
+    [checkJwt, checkRole(["Admin","Hoofdtoediener","Toediener"])],
     ReceiverController.getOneById
 );
 
 //Create a new receiver
-router.post("/",ReceiverController.newReceiver);
+router.post("/",[checkJwt, checkRole(["Admin","Hoofdtoediener"])], ReceiverController.newReceiver);
 
 //Edit one receiver
 router.patch(
     "/:id([0-9]+)",
-   // [checkJwt, checkRole(["ADMIN"])],
+    [checkJwt, checkRole(["Admin","Hoofdtoediener"])],
     ReceiverController.editReceiver
 );
 
 //Delete one receiver
 router.delete(
     "/:id([0-9]+)",
-   // [checkJwt, checkRole(["ADMIN"])],
+    [checkJwt, checkRole(["Admin","Hoofdtoediener"])],
     ReceiverController.deleteReceiver
 );
 
